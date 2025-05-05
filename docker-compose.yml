@@ -10,36 +10,58 @@ services:
     restart: unless-stopped
     working_dir: /patient-management
     volumes:
-      - ./backend:/patient-management
+      - .:/patient-management
+    ports:
+      - "9000:9000"  # Expose port 9000 to the host (optional if using Nginx)
+    expose:
+      - "9000"  # Expose port 9000 for internal communication within Docker
     depends_on:
       - db
     networks:
       - laravel
+    environment:
+      DB_CONNECTION: mysql
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_DATABASE: patient_report
+      DB_USERNAME: root
+      DB_PASSWORD: root
 
   db:
     image: mysql:8.0
-    container_name: laravel-db
+    container_name: patient_report
     restart: unless-stopped
     environment:
+      MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: patient_report
-      MYSQL_ROOT_PASSWORD:
-      MYSQL_USER: root
-      MYSQL_PASSWORD:
     volumes:
       - dbdata:/var/lib/mysql
     networks:
       - laravel
     ports:
-      - "3306:3306"
-
+      - "3308:3306"  # Expose MySQL port to the host for development
+  node:
+    image: node:18
+    container_name: patient-node
+    restart: unless-stopped
+    working_dir: /patient-management
+    volumes:
+      - .:/patient-management
+    command: sh -c "npm install && npm run dev"  # Run npm install and start Vite
+    ports:
+      - "5173:5173"  # Vite's default port
+    depends_on:
+      - app
+    networks:
+      - laravel
   nginx:
     image: nginx:alpine
     container_name: laravel-nginx
     restart: unless-stopped
     ports:
-      - "8000:8000"
+      - "8000:80"  # Expose Nginx port 80 to the host
     volumes:
-      - ./backend:/patient-management
+      - .:/patient-management
       - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
     depends_on:
       - app
