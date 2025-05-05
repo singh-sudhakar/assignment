@@ -25,7 +25,7 @@ RUN docker-php-ext-install pdo_mysql mbstring zip exif pcntl bcmath gd
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 # Copy existing Laravel app
-COPY backend/ /patient-management
+COPY . /patient-management
 
 # Set permissions
 RUN chown -R www-data:www-data /patient-management \
