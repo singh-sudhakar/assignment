@@ -18,5 +18,5 @@ yarn-error.log
 /.idea
 /.vscode
 # Ignore SSH private keys
-/id_ed25519_singh
-/id_ed25519_singh.pub
+id_ed25519_singh
+id_ed25519_singh.pub
