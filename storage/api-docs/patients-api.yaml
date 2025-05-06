@@ -57,6 +57,25 @@ security:
   - SanctumAuth: []
 
 paths:
+  /login:
+    post:
+      summary: Login and receive a Bearer token
+      operationId: loginUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginInput'
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+        '401':
+          description: Invalid credentials
   /patients:
     get:
       summary: Get all patients

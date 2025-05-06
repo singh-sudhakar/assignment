@@ -61,13 +61,34 @@ docker-compose up --build
 ## 🚪 Access the Application
 
 Open your browser and go to:  
-
 http://127.0.0.1:8000
 
+### 🔐 Login Credentials
+
+Use the following test credentials to log in:
+
+- **Email:** sudhakar@tftus.com 
+- **Password:** Pass@123
+
+> These credentials are pre-seeded using Laravel database seeders you can use these credentials to get Bearer token also
+
+### 🛡️ API Authentication Token
+
+To authenticate API requests using Bearer token:
+
+1. After starting the containers, locate the Sanctum token file:
+    storage/app/public/sanctum_token.txt
+2. Copy the token inside the file.
+
+3. Use it in the `Authorization` header of your API requests this token is requried in http://127.0.0.1:8000/api/documentation 
+
+or 
+
+https://swagger.io
 
 ## 📲 API Documentation
 
 for api documnentation Go to:  
 http://127.0.0.1:8000/api/documentation
 
-Or upload the `patient-api.yaml` file to [Swagger](https://swagger.io) to view the API documentation for accessing api.
+Or upload the `patient-api.yaml` from storage/api-docs/patients-api.yaml file to [Swagger](https://swagger.io) to view the API documentation for accessing api.
