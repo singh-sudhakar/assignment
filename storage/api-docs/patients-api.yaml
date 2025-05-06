@@ -82,7 +82,7 @@ paths:
           application/json:
             schema:
               type: object
-              required: [name, group, wait_time, consultation_date, patient_id, week, month]
+              required: [name, group, wait_time, consultation_date]
               properties:
                 name:
                   type: string
@@ -93,12 +93,6 @@ paths:
                 consultation_date:
                   type: string
                   format: date
-                patient_id:
-                  type: string
-                week:
-                  type: integer
-                month:
-                  type: string
       responses:
         '201':
           description: Patient created
@@ -154,12 +148,6 @@ paths:
                 consultation_date:
                   type: string
                   format: date
-                patient_id:
-                  type: string
-                week:
-                  type: integer
-                month:
-                  type: string
       responses:
         '200':
           description: Patient updated
