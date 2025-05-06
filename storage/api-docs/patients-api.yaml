@@ -37,6 +37,7 @@ components:
         token:
           type: string
           example: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9..."
+
     Patient:
       type: object
       properties:
@@ -99,6 +100,7 @@ paths:
                 $ref: '#/components/schemas/LoginResponse'
         '401':
           description: Invalid credentials
+
   /patients:
     get:
       summary: Get all patients
@@ -146,6 +148,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Patient'
+        '400':
+          description: Invalid input data
 
   /patients/{id}:
     get:
@@ -166,6 +170,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Patient'
+        '404':
+          description: Patient not found
 
     patch:
       summary: Update a patient
@@ -203,6 +209,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Patient'
+        '404':
+          description: Patient not found
 
     delete:
       summary: Delete a patient
@@ -218,3 +226,5 @@ paths:
       responses:
         '204':
           description: Patient deleted successfully
+        '404':
+          description: Patient not found
