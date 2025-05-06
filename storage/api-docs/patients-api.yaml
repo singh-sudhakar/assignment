@@ -16,6 +16,27 @@ components:
       bearerFormat: JWT
 
   schemas:
+    LoginInput:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+          example: sudhakar@tftus.com
+        password:
+          type: string
+          format: password
+          example: Pass@123
+
+    LoginResponse:
+      type: object
+      properties:
+        token:
+          type: string
+          example: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9..."
     Patient:
       type: object
       properties:
