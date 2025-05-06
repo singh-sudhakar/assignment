@@ -1,69 +1,48 @@
 <?php
-
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StorePatientRequest;
+use App\Http\Requests\UpdatePatientRequest;
 use App\Models\Patient;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
 
 class PatientController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display a listing of the patients.
+     *
+     * @param Request $request
+     * @return JsonResponse
      */
-    public function index(Request $request)
+    public function index(Request $request): JsonResponse
     {
-         // You can adjust the number of items per page as needed
         $perPage = $request->input('perPage', 10);
         $search = $request->input('search');
 
         $query = Patient::query();
 
         if ($search) {
-            $query->where(function ($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%");
-            });
+            $query->where('name', 'like', "%{$search}%");
         }
 
-        // Paginate patients
-        $patients =  $query->orderBy('id', 'desc')->paginate($perPage);
+        $patients = $query->orderBy('id', 'desc')->paginate($perPage);
 
         return response()->json($patients);
-
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Store a newly created patient.
+     *
+     * @param StorePatientRequest $request
+     * @return JsonResponse
      */
-    public function create()
+    public function store(StorePatientRequest $request): JsonResponse
     {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-
-    public function store(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string',
-            'group' => 'required|in:A,B,C,D',
-            'wait_time' => 'required|integer',
-            'consultation_date' => 'required|date',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'message' => 'Validation Error',
-                'errors' => $validator->errors()
-            ], 400);
-        }
-
-        $data = $validator->validated();
+        $data = $request->validated();
         $data['patient_id'] = Str::uuid()->toString();
         $data['week'] = Carbon::parse($data['consultation_date'])->weekOfYear;
         $data['month'] = Carbon::parse($data['consultation_date'])->format('F');
@@ -74,35 +53,28 @@ class PatientController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Display the specified patient.
+     *
+     * @param Patient $patient
+     * @return JsonResponse
      */
-    public function show(Patient $patient)
+    public function show(Patient $patient): JsonResponse
     {
-
+        return response()->json($patient);
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Update the specified patient.
+     *
+     * @param UpdatePatientRequest $request
+     * @param Patient $patient
+     * @return JsonResponse
      */
-    public function edit(Patient $patient)
+    public function update(UpdatePatientRequest $request, Patient $patient): JsonResponse
     {
-        //
-    }
-
-   /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Patient $patient)
-    {
-        $data = $request->validate([
-            'name' => 'required|string',
-            'group' => 'required|in:A,B,C,D',
-            'wait_time' => 'required|integer',
-            'consultation_date' => 'required|date',
-        ]);
-
-        $data['week'] = \Carbon\Carbon::parse($data['consultation_date'])->weekOfYear;
-        $data['month'] = \Carbon\Carbon::parse($data['consultation_date'])->format('F');
+        $data = $request->validated();
+        $data['week'] = Carbon::parse($data['consultation_date'])->weekOfYear;
+        $data['month'] = Carbon::parse($data['consultation_date'])->format('F');
 
         $patient->update($data);
 
@@ -113,15 +85,24 @@ class PatientController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the specified patient.
+     *
+     * @param Patient $patient
+     * @return JsonResponse
      */
-    public function destroy(Patient $patient)
+    public function destroy(Patient $patient): JsonResponse
     {
         $patient->delete();
+
         return response()->json(['message' => 'Patient deleted']);
     }
 
-    public function groupStats()
+    /**
+     * Get group-based statistics.
+     *
+     * @return JsonResponse
+     */
+    public function groupStats(): JsonResponse
     {
         $data = Patient::select('group', DB::raw('count(*) as total'))
             ->groupBy('group')
@@ -130,14 +111,19 @@ class PatientController extends Controller
         return response()->json($data);
     }
 
-    public function waitStats()
+    /**
+     * Get wait time statistics by week and month.
+     *
+     * @return JsonResponse
+     */
+    public function waitStats(): JsonResponse
     {
         $weekly = Patient::select(
             DB::raw('WEEK(consultation_date) as week'),
             'group',
             DB::raw('count(*) as total')
         )
-        ->groupBy(DB::raw('WEEK(consultation_date)'), 'group') // Ensure WEEK(consultation_date) is in GROUP BY
+        ->groupBy(DB::raw('WEEK(consultation_date)'), 'group')
         ->get();
 
         $monthly = Patient::select(
@@ -145,7 +131,7 @@ class PatientController extends Controller
             'group',
             DB::raw('count(*) as total')
         )
-        ->groupBy(DB::raw('MONTH(consultation_date)'), 'group') // Ensure MONTH(consultation_date) is in GROUP BY
+        ->groupBy(DB::raw('MONTH(consultation_date)'), 'group')
         ->get();
 
         return response()->json([

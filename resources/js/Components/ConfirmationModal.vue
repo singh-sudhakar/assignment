@@ -23,10 +23,15 @@ const cancel = () => {
 <template>
   <div v-if="isVisible" class="modal-overlay">
     <div class="modal-content">
-      <p>Are you sure you want to delete this patient?</p>
-      <PrimaryButton class="bg-green-500 hover:bg-green-600 text-white px-4 py-1 rounded" @click="confirm">Confirm</PrimaryButton>
-      <PrimaryButton class="bg-red-500 hover:bg-red-600 text-white px-4 py-1 rounded m-10" @click="cancel">Cancel</PrimaryButton>
-    </div>
+  <p>Are you sure you want to delete this patient?</p>
+  <PrimaryButton class="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-1 mt-2 mr-2 rounded cursor-pointer" @click="confirm">
+    Confirm
+  </PrimaryButton>
+  <PrimaryButton class="bg-red-500 hover:bg-red-600 text-white px-4 py-1 mt-2 rounded cursor-pointer" @click="cancel">
+    Cancel
+  </PrimaryButton>
+</div>
+
   </div>
 </template>
 

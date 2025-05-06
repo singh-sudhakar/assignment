@@ -57,8 +57,8 @@ const handleSubmit = () => {
         <input v-model="localForm.consultation_date" class="w-full p-2 border rounded" type="date" />
       </div>
       <div class="flex justify-end gap-2">
-        <PrimaryButton @click="emit('close')" class="bg-gray-500 hover:bg-gray-600  text-white px-4 py-1 rounded">Cancel</PrimaryButton>
-        <PrimaryButton @click="handleSubmit" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-1 rounded">
+        <PrimaryButton @click="emit('close')" class="bg-gray-500 hover:bg-gray-600  text-white px-4 py-1 cursor-pointer rounded">Cancel</PrimaryButton>
+        <PrimaryButton @click="handleSubmit" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-1 cursor-pointer rounded">
           {{ props.mode === 'edit' ? 'Update' : 'Add' }} Patient
         </PrimaryButton>
       </div>

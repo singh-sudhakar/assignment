@@ -6,13 +6,13 @@
       </template>
       <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-          <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+          <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-4">
             <div v-if="successMessage" class="text-green-500 p-2 mb-4 border bg-green-100">
               {{ successMessage }}
             </div>
 
             <!-- Grid Layout for Search and Add Button -->
-            <div class="grid grid-cols-5 gap-4 m-6">
+            <div class="grid grid-cols-5 mb-4">
                 <!-- Search Field (4/5 of the row) -->
                 <div class="col-span-4">
                     <input
@@ -25,9 +25,9 @@
                 </div>
 
                 <!-- Add Patient Button (1/5 of the row) -->
-                <div class="col-span-1 text-right">
-                    <PrimaryButton @click="openAddModal" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">
-                    Add Patient
+                <div class="col-span-1 text-right mt-2">
+                    <PrimaryButton @click="openAddModal" class="bg-indigo-500 hover:bg-indigo-600 text-white px-4 py-2 rounded cursor-pointer">
+                        <i class="fas fa-user-plus"></i> Add Patient
                     </PrimaryButton>
                 </div>
             </div>
@@ -55,35 +55,56 @@
                   <td class="border p-2 text-center">{{ patient.week }}</td>
                   <td class="border p-2 text-center">{{ patient.month }}</td>
                   <td class="border p-2 text-center">
-                    <PrimaryButton @click="updatePatient(patient)" class="bg-blue-500 hover:bg-blue-600  text-white px-4 py-1 rounded">
-                        Update
+                    <PrimaryButton @click="updatePatient(patient)" class="bg-indigo-500 hover:bg-indigo-600  text-white px-4 py-1 rounded cursor-pointer">
+                        <i class="fas fa-edit"></i>
                     </PrimaryButton>
-                    <PrimaryButton @click="deletePatient(patient.id)" class="bg-red-500 hover:bg-red-600  text-white ml-3 px-2 py-1 rounded">
-                        Delete
+                    <PrimaryButton @click="deletePatient(patient.id)" class="bg-red-500 hover:bg-red-600  text-white ml-3 px-2 py-1 rounded cursor-pointer">
+                        <i class="fas fa-trash-alt"></i>
                     </PrimaryButton>
                   </td>
                 </tr>
               </tbody>
             </table>
 
-            <!-- Pagination Controls -->
-            <div class="mt-4 flex justify-between items-center">
-              <PrimaryButton
-                :disabled="currentPage === 1"
-                @click="fetchPatients(currentPage - 1)"
-                class="bg-gray-500 text-white px-4 py-2 rounded"
-              >
-                Previous
-              </PrimaryButton>
-              <span>Page {{ currentPage }} of {{ totalPages }}</span>
-              <PrimaryButton
-                :disabled="currentPage === totalPages"
-                @click="fetchPatients(currentPage + 1)"
-                class="bg-gray-500 text-white px-4 py-2 rounded"
-              >
-                Next
-              </PrimaryButton>
+          <!-- Pagination Controls -->
+            <div class="mt-10 flex justify-center items-center space-x-6">
+                <!-- Previous Button -->
+                <PrimaryButton
+                    :disabled="currentPage === 1"
+                    @click="fetchPatients(currentPage - 1)"
+                    :class="[
+                    'text-white px-3 py-2 rounded cursor-pointer',
+                    currentPage === 1
+                        ? 'bg-gray-400 cursor-not-allowed pointer-events-none'
+                        : 'bg-indigo-500 hover:bg-indigo-600'
+                    ]"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                    </svg>
+                </PrimaryButton>
+
+                <!-- Page Info -->
+                <span class="text-sm text-gray-700">Page {{ currentPage }} of {{ totalPages }}</span>
+
+                <!-- Next Button -->
+                <PrimaryButton
+                    :disabled="currentPage === totalPages"
+                    @click="fetchPatients(currentPage + 1)"
+                    :class="[
+                    'text-white px-3 py-2 rounded cursor-pointer',
+                    currentPage === totalPages
+                        ? 'bg-gray-400 cursor-not-allowed pointer-events-none'
+                        : 'bg-indigo-500 hover:bg-indigo-600'
+                    ]"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                </PrimaryButton>
             </div>
+
+
           </div>
         </div>
       </div>

@@ -44,4 +44,30 @@ Make sure you have the following installed:
 
 ```bash
 git clone https://github.com/singh-sudhakar/assignment.git
-cd patient-report
+```
+
+### 2. Change Directory
+
+```bash
+cd assignment
+```
+
+### 3. Build and Start the Containers
+
+```bash
+docker-compose up --build
+```
+
+### Access the Application
+
+Open your browser and go to:  
+
+http://127.0.0.1:8000
+
+
+### API Documentation
+
+for api documnentation Go to:  
+http://127.0.0.1:8000/api/documentation
+
+Or upload the `patient-api.yaml` file to [Swagger](https://swagger.io) to view the API documentation for accessing api.

@@ -5,12 +5,17 @@
         <template #trigger>
           <button class="px-4 py-2 bg-blue-600 text-white rounded">
             {{ selectedLabel }}
+            <i class="fas fa-chevron-down ml-2"></i>
           </button>
         </template>
 
         <template #content>
-          <button @click="setView('weekly')" class="block w-full text-left px-4 py-2 hover:bg-gray-100">Weekly</button>
-          <button @click="setView('monthly')" class="block w-full text-left px-4 py-2 hover:bg-gray-100">Monthly</button>
+          <button @click="setView('weekly')" class="block w-full text-left px-4 py-2 hover:bg-gray-100">
+            <i class="fas fa-calendar-week mr-2"></i> Weekly
+          </button>
+          <button @click="setView('monthly')" class="block w-full text-left px-4 py-2 hover:bg-gray-100">
+            <i class="fas fa-calendar-alt mr-2"></i> Monthly
+          </button>
         </template>
       </Dropdown>
 
@@ -23,7 +28,7 @@
   import { ref, onMounted } from 'vue'
   import axios from 'axios'
   import Chart from 'chart.js/auto'
-  import Dropdown from '@/Components/Dropdown.vue' // Adjust path as needed
+  import Dropdown from '@/Components/Dropdown.vue'
 
   const selectedView = ref('weekly')
   const selectedLabel = ref('Weekly')
@@ -39,9 +44,17 @@
     const res = await axios.get('/api/chart/bar', { withCredentials: true })
     const isWeekly = selectedView.value === 'weekly'
     const dataset = isWeekly ? res.data.weekly : res.data.monthly
+
     const labels = [...new Set(dataset.map(item => isWeekly ? `Week ${item.week}` : `Month ${item.month}`))]
 
     const groups = ['A', 'B', 'C', 'D']
+    const groupColors = {
+      A: '#3B82F6',
+      B: '#10B981',
+      C: '#F59E0B',
+      D: '#EF4444'
+    }
+
     const datasets = groups.map(group => ({
       label: `Group ${group}`,
       data: labels.map(label => {
@@ -51,8 +64,12 @@
         )
         return match ? match.total : 0
       }),
-      backgroundColor: `#${Math.floor(Math.random() * 16777215).toString(16)}`
+      backgroundColor: groupColors[group]
     }))
+
+    // Flatten dataset values to compute max value
+    const allValues = datasets.flatMap(d => d.data)
+    const maxY = Math.max(...allValues) + 2
 
     if (chartInstance) chartInstance.destroy()
 
@@ -65,9 +82,25 @@
       },
       options: {
         responsive: true,
+        scales: {
+          y: {
+            beginAtZero: true,
+            suggestedMax: maxY,
+            ticks: {
+              stepSize: 1
+            },
+            title: {
+              display: true,
+              text: 'Patient Count'
+            }
+          }
+        },
         plugins: {
           legend: { position: 'top' },
-          title: { display: true, text: `${selectedLabel.value} Patient Group Distribution` }
+          title: {
+            display: true,
+            text: `${selectedLabel.value} Patient Group Distribution`
+          }
         }
       }
     })
