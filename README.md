@@ -58,14 +58,14 @@ cd assignment
 docker-compose up --build
 ```
 
-### Access the Application
+## 🚪 Access the Application
 
 Open your browser and go to:  
 
 http://127.0.0.1:8000
 
 
-### API Documentation
+## 📲 API Documentation
 
 for api documnentation Go to:  
 http://127.0.0.1:8000/api/documentation
