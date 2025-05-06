@@ -1,0 +1,184 @@
+openapi: 3.0.3
+info:
+  title: Patients API
+  version: 1.0.0
+  description: API for managing patients, secured by Laravel Sanctum.
+
+servers:
+  - url: http://127.0.0.1:8000/api
+    description: Local development server
+
+components:
+  securitySchemes:
+    SanctumAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    Patient:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: John Doe
+        group:
+          type: string
+          example: A
+        wait_time:
+          type: integer
+          example: 15
+        consultation_date:
+          type: string
+          format: date
+          example: 2025-05-06
+        patient_id:
+          type: string
+          example: P123456
+        week:
+          type: integer
+          example: 19
+        month:
+          type: string
+          example: May
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+security:
+  - SanctumAuth: []
+
+paths:
+  /patients:
+    get:
+      summary: Get all patients
+      tags: [Patients]
+      security:
+        - SanctumAuth: []
+      responses:
+        '200':
+          description: A list of patients
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Patient'
+
+    post:
+      summary: Create a new patient
+      tags: [Patients]
+      security:
+        - SanctumAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name, group, wait_time, consultation_date, patient_id, week, month]
+              properties:
+                name:
+                  type: string
+                group:
+                  type: string
+                wait_time:
+                  type: integer
+                consultation_date:
+                  type: string
+                  format: date
+                patient_id:
+                  type: string
+                week:
+                  type: integer
+                month:
+                  type: string
+      responses:
+        '201':
+          description: Patient created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Patient'
+
+  /patients/{id}:
+    get:
+      summary: Get a single patient
+      tags: [Patients]
+      security:
+        - SanctumAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: A patient
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Patient'
+
+    patch:
+      summary: Update a patient
+      tags: [Patients]
+      security:
+        - SanctumAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                group:
+                  type: string
+                wait_time:
+                  type: integer
+                consultation_date:
+                  type: string
+                  format: date
+                patient_id:
+                  type: string
+                week:
+                  type: integer
+                month:
+                  type: string
+      responses:
+        '200':
+          description: Patient updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Patient'
+
+    delete:
+      summary: Delete a patient
+      tags: [Patients]
+      security:
+        - SanctumAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Patient deleted successfully
