@@ -27,6 +27,8 @@ components:
           example: John Doe
         group:
           type: string
+          enum: [A, B, C, D]
+          default: A
           example: A
         wait_time:
           type: integer
@@ -88,6 +90,8 @@ paths:
                   type: string
                 group:
                   type: string
+                  enum: [A, B, C, D]
+                  default: A
                 wait_time:
                   type: integer
                 consultation_date:
@@ -143,6 +147,8 @@ paths:
                   type: string
                 group:
                   type: string
+                  enum: [A, B, C, D]
+                  default: A
                 wait_time:
                   type: integer
                 consultation_date:
