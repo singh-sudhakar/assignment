@@ -81,6 +81,8 @@ paths:
   /login:
     post:
       summary: Login and receive a Bearer token
+      tags:
+        - Authentication
       operationId: loginUser
       requestBody:
         required: true
